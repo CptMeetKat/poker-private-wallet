@@ -1,3 +1,13 @@
+# Fork Details
+
+This fork is intended to provided a private wallet until a wallet feature becomes on the original fork.
+
+Please note the following:
+*  This only works when self-hosting the bot
+*  Is only intended for a single server
+*  Is only intended for a single discord text channel
+
+
 # poker
 
 A Clojure implementation of a poker game ([Texas Hold 'em](https://en.wikipedia.org/wiki/Texas_hold_%27em)) and a corresponding Discord bot to play poker in chat.
