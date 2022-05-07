@@ -9,3 +9,4 @@ COPY . .
 CMD ["lein", "run"]
 
 
+RUN echo "{}" > wallets.txt

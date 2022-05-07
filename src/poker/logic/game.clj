@@ -165,9 +165,11 @@
                 :player-cards    (zipmap players (partition 2 player-cards))
                 :round-bets      (zipmap players (repeat 0))
                 :turns           0
+                :budgets {}
                 :state           :pre-flop})
-        (update :budgets select-keys players)
-        (update :budgets #(merge-with + % new-budgets))
+        ;; (update :budgets select-keys players)
+        ;; (update :budgets #(merge-with + % new-budgets))
+        (update :budgets #(merge % new-budgets))
         (dissoc :winner :prize :hands)
         (bet small-blind-value)
         (bet big-blind-value)

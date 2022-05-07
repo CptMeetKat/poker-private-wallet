@@ -128,6 +128,16 @@
         (respond-interaction id token (-> {:content (i18n/loc-msg guild-id :playing.move.raise/invalid-amount)} rsp/channel-message rsp/ephemeral)))
       (respond-interaction id token (-> {:content (i18n/loc-msg guild-id :playing.move.raise/passed)} rsp/channel-message rsp/ephemeral)))))
 
+(defn writeWallet [{:keys [budgets]}]
+  ; Write the current balance of wallets and remove accounts with 0
+  (spit "wallets.txt" (merge (clojure.edn/read-string (slurp "wallets.txt"))     
+  
+    (apply dissoc budgets
+        (for [[k v] budgets :when (= v 0)] k))   
+    ))
+
+
+)
 (defn game-loop! [bundle timeout game]
   (go-loop [{:keys [state channel-id move-chan abort-chan] :as game} game]
     ;; Show community cards and pots
@@ -135,6 +145,7 @@
     (if (poker/end? game)
       ;; End game appropriately
       (do
+      (writeWallet game)
         (run!
          #(dr/create-message! rest-conn channel-id :content %)
          ((case state :instant-win (comp vector disp/instant-win-message) :showdown disp/showdown-messages) bundle game))
@@ -161,8 +172,16 @@
                               :fold (poker/fold game)
                               :raise (poker/raise game amount)))))))))
 
+(defn readWallet []
+   (clojure.edn/read-string (slurp "wallets.txt"))
+)
+
 (defn calculate-budgets [players buy-in previous-budgets]
-  (zipmap (set/difference (set players) (set (keys previous-budgets))) (repeat buy-in)))
+    ;; All players that have no budget will be given the buy-in
+    ;; All player that exist in the wallet will use their previous wallet amount
+    (select-keys (merge (zipmap (set/difference (set players) (set (keys previous-budgets))) (repeat buy-in)) (readWallet)) players)
+
+)
 
 
 (defn notify-players!
