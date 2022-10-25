@@ -1,5 +1,10 @@
 # poker
 
+## Reason for Fork
+- Fork of the original Poker bot to add support for a local wallet on the host machine.
+
+## Poker Bot
+
 A Clojure implementation of a poker game ([Texas Hold 'em](https://en.wikipedia.org/wiki/Texas_hold_%27em)) and a corresponding Discord bot to play poker in chat.
 
 This is (roughly) how the logic part is used:
